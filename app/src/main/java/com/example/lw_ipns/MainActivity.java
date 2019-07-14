@@ -19,28 +19,27 @@ public class MainActivity extends AppCompatActivity {
 
         private TextView textView;
         private WifiManager wifiManager;
-        WifiReceiver wifiReceiver;
+   //     WifiReceiver wifiReceiver;
         private List<ScanResult> wifiList;
         private StringBuilder sb = new StringBuilder();
 
-    public class WifiReceiver extends BroadcastReceiver {
+    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("wifi", "");
+            Log.e("wifi", "WifiReciever Call toh hua chalo");
             wifiList = wifiManager.getScanResults();
             Log.e("sb", "Wifi Connections are");
             sb.append("Wifi Connections are: ").append(wifiList.size()).append("\n\n");
 
             Log.e("sb", "StringBuilder me append ho rha hai");
             for(int i=0; i<wifiList.size(); i++){
-                sb.append(Integer.toString(i + 1));
-                //sb.append(i + 1);
+                sb.append((i + 1));
                 sb.append(wifiList.get(i).toString());
                 sb.append("\n\n");
             }
             textView.setText(sb);
         }
-    }
+    };
 
 
     @Override
@@ -66,15 +65,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    protected void onStop() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(wifiReceiver);
         //unregisterReceiver(wifiReceiver);
-        super.onPause();
+        super.onStop();
     }
 
     @Override
-    protected void onResume() {
+    protected void onStart() {
         registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        super.onResume();
+        super.onStart();
     }
 }
